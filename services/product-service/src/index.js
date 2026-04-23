@@ -12,13 +12,22 @@ const app = express();
 
 app.use(helmet());
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
-  : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : []),
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : []),
+].filter(Boolean).map((o) => o.trim().replace(/\/$/, ''));
+const ipOriginPattern = /^https?:\/\/(\d{1,3}\.){3}\d{1,3}(:\d+)?$/;
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    const normalizedOrigin = origin ? origin.replace(/\/$/, '') : origin;
+    if (
+      !normalizedOrigin ||
+      allowedOrigins.includes(normalizedOrigin) ||
+      ipOriginPattern.test(normalizedOrigin)
+    ) return callback(null, true);
     callback(new Error(`CORS: Origin ${origin} not allowed`));
   },
   credentials: true,
