@@ -20,6 +20,21 @@ const ProductCard = ({ product }) => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [adding, setAdding] = React.useState(false);
+  const getFallbackImage = React.useCallback(
+    () => `https://picsum.photos/seed/${encodeURIComponent(product.sku || product._id || product.name)}/800/800`,
+    [product._id, product.name, product.sku]
+  );
+  const getFinalPlaceholderImage = React.useCallback(
+    () => `https://placehold.co/800x800/e2e8f0/1e293b?text=${encodeURIComponent(product.category || 'Product')}`,
+    [product.category]
+  );
+  const [imageSrc, setImageSrc] = React.useState(product.imageUrl || getFallbackImage());
+  const [fallbackTried, setFallbackTried] = React.useState(false);
+
+  React.useEffect(() => {
+    setImageSrc(product.imageUrl || getFallbackImage());
+    setFallbackTried(false);
+  }, [product.imageUrl, getFallbackImage]);
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
@@ -41,8 +56,22 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group animate-fade-in flex flex-col">
       {/* Product image placeholder */}
       <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 h-44 flex items-center justify-center overflow-hidden">
-        {product.imageUrl ? (
-          <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={() => {
+              if (!fallbackTried) {
+                setImageSrc(getFallbackImage());
+                setFallbackTried(true);
+              } else {
+                setImageSrc(getFinalPlaceholderImage());
+              }
+            }}
+          />
         ) : (
           <div className="flex flex-col items-center gap-2 text-blue-300">
             <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">

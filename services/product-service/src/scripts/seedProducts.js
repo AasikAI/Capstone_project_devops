@@ -118,8 +118,8 @@ const buildDescription = (name, category) =>
   `${name} crafted for ${category.toLowerCase()} shoppers. Durable build, reliable quality, and great value for everyday use.`;
 
 const buildImageUrl = (category, itemName, index) => {
-  const query = encodeURIComponent(`${category} ${itemName}`);
-  return `https://source.unsplash.com/800x800/?${query}&sig=${index + 1}`;
+  const seed = encodeURIComponent(`${category}-${itemName}-${index + 1}`);
+  return `https://picsum.photos/seed/${seed}/800/800`;
 };
 
 const buildProducts = () => {
