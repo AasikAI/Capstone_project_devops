@@ -15,28 +15,30 @@ const CATEGORY_COLORS = {
   Other: 'bg-gray-100 text-gray-600',
 };
 
+const CATEGORY_IMAGE_MAP = {
+  Electronics: '/images/products/electronics.svg',
+  Clothing: '/images/products/clothing.svg',
+  Books: '/images/products/books.svg',
+  'Home & Garden': '/images/products/home-garden.svg',
+  Sports: '/images/products/sports.svg',
+  Toys: '/images/products/toys.svg',
+  Beauty: '/images/products/beauty.svg',
+  Other: '/images/products/other.svg',
+};
+
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [adding, setAdding] = React.useState(false);
+  const categoryImage = CATEGORY_IMAGE_MAP[product.category] || CATEGORY_IMAGE_MAP.Other;
   const getFallbackImage = React.useCallback(
-    () => {
-      const keyword = encodeURIComponent(
-        String(product.name || product.category || 'product')
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim()
-          .replace(/\s/g, ',')
-      );
-      return `https://loremflickr.com/800/800/${keyword}?lock=999`;
-    },
-    [product.category, product.name]
+    () => categoryImage,
+    [categoryImage]
   );
   const getFinalPlaceholderImage = React.useCallback(
-    () => `https://placehold.co/800x800/e2e8f0/1e293b?text=${encodeURIComponent(product.category || 'Product')}`,
-    [product.category]
+    () => CATEGORY_IMAGE_MAP.Other,
+    []
   );
   const [imageSrc, setImageSrc] = React.useState(product.imageUrl || getFallbackImage());
   const [fallbackTried, setFallbackTried] = React.useState(false);

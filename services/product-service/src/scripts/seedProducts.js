@@ -13,6 +13,17 @@ const CATEGORY_PREFIX = {
   Other: 'OTHR',
 };
 
+const CATEGORY_IMAGE_MAP = {
+  Electronics: '/images/products/electronics.svg',
+  Clothing: '/images/products/clothing.svg',
+  Books: '/images/products/books.svg',
+  'Home & Garden': '/images/products/home-garden.svg',
+  Sports: '/images/products/sports.svg',
+  Toys: '/images/products/toys.svg',
+  Beauty: '/images/products/beauty.svg',
+  Other: '/images/products/other.svg',
+};
+
 const CATEGORY_PRODUCTS = {
   Electronics: [
     { name: 'Wireless Noise-Canceling Headphones', brand: 'SoundMax', price: 3499, stock: 42, tags: ['audio', 'wireless', 'headphones'], imageQuery: 'wireless headphones' },
@@ -117,18 +128,7 @@ const slugify = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').repla
 const buildDescription = (name, category) =>
   `${name} crafted for ${category.toLowerCase()} shoppers. Durable build, reliable quality, and great value for everyday use.`;
 
-const buildImageUrl = (category, itemName, index) => {
-  const keyword = encodeURIComponent(
-    String(itemName || category)
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .replace(/\s/g, ',')
-  );
-  // Lock ensures stable image per product; keyword keeps it category/product relevant.
-  return `https://loremflickr.com/800/800/${keyword}?lock=${index + 1}`;
-};
+const buildImageUrl = (category) => CATEGORY_IMAGE_MAP[category] || CATEGORY_IMAGE_MAP.Other;
 
 const buildProducts = () => {
   const products = [];
@@ -142,7 +142,7 @@ const buildProducts = () => {
         price: item.price,
         category,
         stock: item.stock,
-        imageUrl: buildImageUrl(category, item.imageQuery || item.name, idx),
+        imageUrl: buildImageUrl(category),
         sku,
         brand: item.brand,
         rating: { average: 3.8 + (idx % 3) * 0.3, count: 20 + idx * 7 },
