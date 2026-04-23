@@ -40,12 +40,12 @@ const RegisterPage = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold">S</span>
+              <span className="text-white font-bold">K</span>
             </div>
-            <span className="text-2xl font-bold text-gray-900">Shop<span className="text-blue-600">Ease</span></span>
+            <span className="text-2xl font-bold text-gray-900">Kube<span className="text-blue-600">Cart</span></span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
-          <p className="text-gray-500 text-sm mt-1">Join ShopEase and start shopping</p>
+          <p className="text-gray-500 text-sm mt-1">Join KubeCart and start shopping today</p>
         </div>
 
         <div className="card shadow-lg border-0">

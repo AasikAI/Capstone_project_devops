@@ -1,4 +1,4 @@
-# ShopEase — Mini E-Commerce Microservices Platform
+# KubeCart — E-Commerce Platform
 
 > **Production-ready scaffolding** for a three-tier microservices application built for practising Kubernetes, Helm, ArgoCD, and CI/CD pipelines.
 

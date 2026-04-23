@@ -1,4 +1,4 @@
-# ShopEase — Architecture Design & Traffic Flow
+# KubeCart — Architecture Design & Traffic Flow
 
 ## 1. System Architecture Overview
 

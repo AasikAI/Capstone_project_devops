@@ -42,7 +42,7 @@ function App() {
               </Routes>
             </main>
             <footer className="bg-white border-t border-gray-100 py-4 text-center text-xs text-gray-400">
-              © {new Date().getFullYear()} ShopEase · Mini E-Commerce Microservices Platform
+              © {new Date().getFullYear()} KubeCart · All rights reserved.
             </footer>
           </div>
         </CartProvider>

@@ -1,7 +1,7 @@
 version: "3.9"
 
 networks:
-  shopease-network:
+  kubecart-network:
     driver: bridge
 
 volumes:
@@ -18,7 +18,7 @@ services:
     volumes:
       - mongo-data:/data/db
     networks:
-      - shopease-network
+      - kubecart-network
     ports:
       - "27017:27017"
     healthcheck:
@@ -28,7 +28,7 @@ services:
       retries: 5
 
   # ─────────────────────────────────────────────
-  # Backend Microservices
+  # Backend Services
   # ─────────────────────────────────────────────
   auth-service:
     build: ./services/auth-service
@@ -50,7 +50,7 @@ services:
       mongo:
         condition: service_healthy
     networks:
-      - shopease-network
+      - kubecart-network
 
   product-service:
     build: ./services/product-service
@@ -69,7 +69,7 @@ services:
       mongo:
         condition: service_healthy
     networks:
-      - shopease-network
+      - kubecart-network
 
   order-service:
     build: ./services/order-service
@@ -90,7 +90,7 @@ services:
       mongo:
         condition: service_healthy
     networks:
-      - shopease-network
+      - kubecart-network
 
   cart-service:
     build: ./services/cart-service
@@ -110,7 +110,7 @@ services:
       mongo:
         condition: service_healthy
     networks:
-      - shopease-network
+      - kubecart-network
 
   user-profile-service:
     build: ./services/user-profile-service
@@ -129,7 +129,7 @@ services:
       mongo:
         condition: service_healthy
     networks:
-      - shopease-network
+      - kubecart-network
 
   notification-service:
     build: ./services/notification-service
@@ -153,7 +153,7 @@ services:
       mongo:
         condition: service_healthy
     networks:
-      - shopease-network
+      - kubecart-network
 
   # ─────────────────────────────────────────────
   # Frontend
@@ -169,5 +169,13 @@ services:
         condition: service_started
       product-service:
         condition: service_started
+      order-service:
+        condition: service_started
+      cart-service:
+        condition: service_started
+      user-profile-service:
+        condition: service_started
+      notification-service:
+        condition: service_started
     networks:
-      - shopease-network
+      - kubecart-network
