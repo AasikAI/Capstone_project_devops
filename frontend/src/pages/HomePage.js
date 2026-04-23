@@ -8,7 +8,9 @@ const categories = [
   { icon: '📚', label: 'Books' },
   { icon: '🏡', label: 'Home & Garden' },
   { icon: '⚽', label: 'Sports' },
+  { icon: '🧸', label: 'Toys' },
   { icon: '💄', label: 'Beauty' },
+  { icon: '🛍️', label: 'Other' },
 ];
 
 const features = [
@@ -68,7 +70,7 @@ const HomePage = () => {
       <section className="max-w-6xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Shop by Category</h2>
         <p className="text-gray-400 text-center text-sm mb-8">Find exactly what you're looking for</p>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
           {categories.map((cat) => (
             <Link
               key={cat.label}
