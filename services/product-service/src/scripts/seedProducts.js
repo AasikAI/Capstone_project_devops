@@ -118,8 +118,16 @@ const buildDescription = (name, category) =>
   `${name} crafted for ${category.toLowerCase()} shoppers. Durable build, reliable quality, and great value for everyday use.`;
 
 const buildImageUrl = (category, itemName, index) => {
-  const seed = encodeURIComponent(`${category}-${itemName}-${index + 1}`);
-  return `https://picsum.photos/seed/${seed}/800/800`;
+  const keyword = encodeURIComponent(
+    String(itemName || category)
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\s/g, ',')
+  );
+  // Lock ensures stable image per product; keyword keeps it category/product relevant.
+  return `https://loremflickr.com/800/800/${keyword}?lock=${index + 1}`;
 };
 
 const buildProducts = () => {

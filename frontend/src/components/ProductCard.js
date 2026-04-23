@@ -21,8 +21,18 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const [adding, setAdding] = React.useState(false);
   const getFallbackImage = React.useCallback(
-    () => `https://picsum.photos/seed/${encodeURIComponent(product.sku || product._id || product.name)}/800/800`,
-    [product._id, product.name, product.sku]
+    () => {
+      const keyword = encodeURIComponent(
+        String(product.name || product.category || 'product')
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .replace(/\s/g, ',')
+      );
+      return `https://loremflickr.com/800/800/${keyword}?lock=999`;
+    },
+    [product.category, product.name]
   );
   const getFinalPlaceholderImage = React.useCallback(
     () => `https://placehold.co/800x800/e2e8f0/1e293b?text=${encodeURIComponent(product.category || 'Product')}`,
