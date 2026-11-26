@@ -66,33 +66,34 @@ Sign up free at mailtrap.io → Inboxes → SMTP Settings → copy credentials.
 
 ## ✅ Step 3 — Seed Sample Products
 
-The product catalog is empty on first run. You must insert products manually.
+The product catalog is empty on first run. Use the included seed script to add a full catalog with product images.
 
-**Option A: Use cURL (after starting containers)**
+**Recommended (one command):**
 ```bash
-# Login as admin first — you need to manually set role='admin' in MongoDB OR
-# use the register endpoint and update role directly in the DB.
+cd services/product-service
+npm run seed:products
+```
 
+This script seeds **all supported categories**:
+- Electronics
+- Clothing
+- Books
+- Home & Garden
+- Sports
+- Toys
+- Beauty
+- Other
+
+Each category gets **10 products** with category-relevant `imageUrl` values, for a total of **80 products**.
+
+**Alternative: add/edit products manually from the admin API**
+```bash
 # Register a user
 curl -X POST http://localhost:4001/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"firstName":"Admin","lastName":"User","email":"admin@shopease.com","password":"Admin@1234"}'
 
-# Use mongosh to promote to admin role:
-docker exec -it product-mongo mongosh product_db \
-  --eval "db.products.insertMany([
-    {name:'Wireless Headphones',description:'Premium noise-cancelling headphones',price:2999,category:'Electronics',stock:50,sku:'ELEC-001',brand:'SoundMax',isActive:true,rating:{average:4.5,count:120},tags:['audio','wireless']},
-    {name:'Running Shoes',description:'Lightweight breathable running shoes',price:1499,category:'Sports',stock:30,sku:'SPRT-001',brand:'FleetFoot',isActive:true,rating:{average:4.2,count:85},tags:['shoes','running']},
-    {name:'JavaScript: The Good Parts',description:'A deep dive into the best features of JS',price:499,category:'Books',stock:100,sku:'BOOK-001',brand:'OReilly',isActive:true,rating:{average:4.8,count:340},tags:['programming','javascript']},
-    {name:'Smart Watch',description:'Fitness and health tracking smartwatch',price:5999,category:'Electronics',stock:20,sku:'ELEC-002',brand:'TimePro',isActive:true,rating:{average:4.3,count:67},tags:['wearable','fitness']},
-    {name:'Cotton T-Shirt',description:'Comfortable everyday cotton tee',price:299,category:'Clothing',stock:200,sku:'CLTH-001',brand:'BasicWear',isActive:true,rating:{average:4.0,count:210},tags:['casual','clothing']},
-    {name:'Yoga Mat',description:'Non-slip eco-friendly yoga mat',price:799,category:'Sports',stock:45,sku:'SPRT-002',brand:'ZenFlex',isActive:true,rating:{average:4.6,count:95},tags:['yoga','fitness']}
-  ])"
-```
-
-**Option B: Promote a user to admin, then use the UI**
-```bash
-# Connect to auth-mongo and promote a registered user
+# Promote the user to admin
 docker exec -it auth-mongo mongosh auth_db \
   --eval 'db.users.updateOne({email:"admin@shopease.com"},{$set:{role:"admin"}})'
 ```

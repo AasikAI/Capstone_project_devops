@@ -31,18 +31,18 @@ const buildEmailHtml = (type, payload) => {
               </tr>`).join('')}
           </table>
           <p><strong>Total: ₹${payload.totalAmount ? payload.totalAmount.toFixed(2) : '0.00'}</strong></p>
-          <p style="color:#666;font-size:12px;">ShopEase Mini E-Commerce Platform</p>
+          <p style="color:#666;font-size:12px;">KubeCart &mdash; Your trusted online store.</p>
         </div>`;
     case 'welcome':
       return `
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
-          <h2 style="color:#1d4ed8;">👋 Welcome to ShopEase!</h2>
+          <h2 style="color:#1d4ed8;">👋 Welcome to KubeCart!</h2>
           <p>Hi ${payload.firstName || 'there'}, your account has been created successfully.</p>
           <p>Start exploring our products and enjoy shopping!</p>
-          <p style="color:#666;font-size:12px;">ShopEase Mini E-Commerce Platform</p>
+          <p style="color:#666;font-size:12px;">KubeCart &mdash; Your trusted online store.</p>
         </div>`;
     default:
-      return `<div style="font-family:sans-serif;padding:20px;"><p>${payload.message || 'Notification from ShopEase.'}</p></div>`;
+      return `<div style="font-family:sans-serif;padding:20px;"><p>${payload.message || 'Notification from KubeCart.'}</p></div>`;
   }
 };
 
@@ -61,7 +61,7 @@ const sendNotification = async (req, res) => {
 
     try {
       await transporter.sendMail({
-        from: `"ShopEase" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+        from: `"KubeCart" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
         to,
         subject,
         html: htmlContent,

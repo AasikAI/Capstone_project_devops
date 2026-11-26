@@ -3,7 +3,7 @@ import { orderApi } from '../services/api';
 import toast from 'react-hot-toast';
 
 const STATUS_BADGE = {
-  pending: 'badge-yellow',
+  pending: 'badge-green',
   confirmed: 'badge-blue',
   processing: 'badge-blue',
   shipped: 'badge-blue',
@@ -73,7 +73,11 @@ const OrdersPage = () => {
                   <p className="text-sm text-gray-500 mt-0.5">{new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={STATUS_BADGE[order.status] || 'badge-gray'}>{order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                  <span className={STATUS_BADGE[order.status] || 'badge-gray'}>
+                    {order.status === 'pending'
+                      ? 'Confirmed'
+                      : order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  </span>
                   <span className="font-bold text-gray-900">₹{order.totalAmount.toFixed(2)}</span>
                 </div>
               </div>

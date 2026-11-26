@@ -15,11 +15,38 @@ const CATEGORY_COLORS = {
   Other: 'bg-gray-100 text-gray-600',
 };
 
+const CATEGORY_IMAGE_MAP = {
+  Electronics: '/images/products/electronics.svg',
+  Clothing: '/images/products/clothing.svg',
+  Books: '/images/products/books.svg',
+  'Home & Garden': '/images/products/home-garden.svg',
+  Sports: '/images/products/sports.svg',
+  Toys: '/images/products/toys.svg',
+  Beauty: '/images/products/beauty.svg',
+  Other: '/images/products/other.svg',
+};
+
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [adding, setAdding] = React.useState(false);
+  const categoryImage = CATEGORY_IMAGE_MAP[product.category] || CATEGORY_IMAGE_MAP.Other;
+  const getFallbackImage = React.useCallback(
+    () => categoryImage,
+    [categoryImage]
+  );
+  const getFinalPlaceholderImage = React.useCallback(
+    () => CATEGORY_IMAGE_MAP.Other,
+    []
+  );
+  const [imageSrc, setImageSrc] = React.useState(product.imageUrl || getFallbackImage());
+  const [fallbackTried, setFallbackTried] = React.useState(false);
+
+  React.useEffect(() => {
+    setImageSrc(product.imageUrl || getFallbackImage());
+    setFallbackTried(false);
+  }, [product.imageUrl, getFallbackImage]);
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
@@ -41,8 +68,22 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group animate-fade-in flex flex-col">
       {/* Product image placeholder */}
       <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 h-44 flex items-center justify-center overflow-hidden">
-        {product.imageUrl ? (
-          <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={() => {
+              if (!fallbackTried) {
+                setImageSrc(getFallbackImage());
+                setFallbackTried(true);
+              } else {
+                setImageSrc(getFinalPlaceholderImage());
+              }
+            }}
+          />
         ) : (
           <div className="flex flex-col items-center gap-2 text-blue-300">
             <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">

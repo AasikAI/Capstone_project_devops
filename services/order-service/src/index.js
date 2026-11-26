@@ -11,7 +11,33 @@ const logger = require('./config/logger');
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*', credentials: true }));
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : []),
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : []),
+].filter(Boolean).map((o) => o.trim().replace(/\/$/, ''));
+const ipOriginPattern = /^https?:\/\/(\d{1,3}\.){3}\d{1,3}(:\d+)?$/;
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    const normalizedOrigin = origin ? origin.replace(/\/$/, '') : origin;
+    if (
+      !normalizedOrigin ||
+      allowedOrigins.includes(normalizedOrigin) ||
+      ipOriginPattern.test(normalizedOrigin)
+    ) return callback(null, true);
+    callback(new Error(`CORS: Origin ${origin} not allowed`));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 150 });
 app.use('/api/', limiter);
 app.use(morgan('combined', { stream: { write: (msg) => logger.info(msg.trim()) } }));
